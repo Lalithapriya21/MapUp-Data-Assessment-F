@@ -4,7 +4,20 @@ from datetime import datetime as dt
 from itertools import product
 import warnings
 warnings.filterwarnings('ignore')
-path=
+path=r'C:\Users\lalitha\OneDrive\Documents\GitHub\MapUp-Data-Assessment-F\datasets'
+file1=r'\dataset-1.csv'
+file2=r'\dataset-2.csv'
+
+
+#Q1 Car Generation matrix
+def generate_car-matrix(dataset):
+     df = pd.read_csv(dataset)
+     #pivot the data frame to create a matrix
+    car_matrix=df.pivot(index='id=1',columns='id_2',values='car').fillna(0)
+    #set diagonal values to 0
+    for col in car_matrix.columns.tolist():
+        car_matrix.at[col,col]=0
+    return car_matrix    
 
 def get_type_count(df)->dict:
     """
