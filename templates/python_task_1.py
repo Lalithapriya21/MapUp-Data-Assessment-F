@@ -19,76 +19,64 @@ def generate_car-matrix(dataset):
         car_matrix.at[col,col]=0
     return car_matrix    
 
-def get_type_count(df)->dict:
-    """
-    Categorizes 'car' values into types and returns a dictionary of counts.
+#Q2 Car Type Count Calculation
 
-    Args:
-        df (pandas.DataFrame)
+def get_type_count(dataset):
+df=pd.read_csv(dataset)
+#create the column car_type
+df['car_type']=df['car'].apply(lambda x:'low' if x<=15 else('medium' if 15<x<=25 else 'high'))
+#create a dictionary of value counts of each car type and sort it by alphabetical order
+final_dict=pd.DataFrame(df['car_type'].value_counts()).sort_index(axis=0).to_dict()['count']
+return final_dict
+     
+#Q3 Bus Count Interval Index
 
-    Returns:
-        dict: A dictionary with car types as keys and their counts as values.
-    """
-    # Write your logic here
+def get_bus_indexes(dataset):
+     df=pd.read_csv(dataset)
+     #returning the list of indexes where bus value > 2* mean of the ccolumn
+     final_list=df]df['bus']>(df['bus'].mean()*2)].sort_index(axis=0).index.tolist()
+     return final_list
 
-    return dict()
+#Q4 Route Filtering
 
-
-def get_bus_indexes(df)->list:
-    """
-    Returns the indexes where the 'bus' values are greater than twice the mean.
-
-    Args:
-        df (pandas.DataFrame)
-
-    Returns:
-        list: List of indexes where 'bus' values exceed twice the mean.
-    """
-    # Write your logic here
-
-    return list()
+def filter_routes(dataset):
+     df=pd.read_csv(dataset)
+     df1=df.groupby('route').agg({'truck':'mean'}).sort_index(axis=0)
+     final_list=df1[df1['truck']>7].index.tolist()
+     return final_list
 
 
-def filter_routes(df)->list:
-    """
-    Filters and returns routes with average 'truck' values greater than 7.
+#Q5 Matrix Value Modification
+def multiply_matrix(result):
+     result1=result.applymap(lambda x: x*0.75 if x>20 else x*1.25)
+     return result1
 
-    Args:
-        df (pandas.DataFrame)
-
-    Returns:
-        list: List of route names with average 'truck' values greater than 7.
-    """
-    # Write your logic here
-
-    return list()
+#Q6 Time Check
 
 
-def multiply_matrix(matrix)->pd.DataFrame:
-    """
-    Multiplies matrix values with custom conditions.
 
-    Args:
-        matrix (pandas.DataFrame)
+def time_check(dataset):
+     df=pd.read_csv(dataset)
+     df['startTime']=pd.to_datetime(df['startTime'],format=%H:%M:%S')
+     df['endTime']=pd.to_datetime(df['endTime'],format='%H:%M:%S')
+     df['incorrect_start_flag']=np.where(
+          (df['startTime'].dt.hour !=0) |
+          (df['startTime'].dt.minute !=0) |
+          (df['startTime'].dt.second!=0) |
+          ~df['saturday'].isin(['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']),1,0
+     )
+     df['incorrect_combined']=df[['incorrect_start_flag','incorrect_end_flag']].apply(lambda x:max(x[0],x[1],axis=1)
+     df['incorrect_combined']=df['incorrect_commbined'].apply(lambda x:True if x==1 else False)
+     final=df.groupby(['id','id_2'])['incorrect_combined'].any()
+     return final
 
-    Returns:
-        pandas.DataFrame: Modified matrix with values multiplied based on custom conditions.
-    """
-    # Write your logic here
+def _main_(path,file1,file2):
+     result1=generate_car_matrix(path+file1)
+     result2=get_type_count(path+file1)
+     result3=get_bus_indexes(path+file1)
+     result4=filter_routes(path+file1)
+     result5=multiply_matrix(result1)
+     result6=time_check(path+file2)
+     return result1,result2,result3,result4,result5,result6
 
-    return matrix
-
-
-def time_check(df)->pd.Series:
-    """
-    Use shared dataset-2 to verify the completeness of the data by checking whether the timestamps for each unique (`id`, `id_2`) pair cover a full 24-hour and 7 days period
-
-    Args:
-        df (pandas.DataFrame)
-
-    Returns:
-        pd.Series: return a boolean series
-    """
-    # Write your logic here
-
-    return pd.Series()
+result1,result2,result3,result4,result5,result6=_main_(path,file1,file2)
