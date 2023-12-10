@@ -1,21 +1,10 @@
 import pandas as pd
-
-
-def generate_car_matrix(df)->pd.DataFrame:
-    """
-    Creates a DataFrame  for id combinations.
-
-    Args:
-        df (pandas.DataFrame)
-
-    Returns:
-        pandas.DataFrame: Matrix generated with 'car' values, 
-                          where 'id_1' and 'id_2' are used as indices and columns respectively.
-    """
-    # Write your logic here
-
-    return df
-
+import numpy as np
+from datetime import datetime as dt
+from itertools import product
+import warnings
+warnings.filterwarnings('ignore')
+path=
 
 def get_type_count(df)->dict:
     """
